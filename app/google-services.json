@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "500795484862",
+    "project_id": "persona-bc110",
+    "storage_bucket": "persona-bc110.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:500795484862:android:20ee9fbf83ee7a41b34cef",
+        "android_client_info": {
+          "package_name": "com.brayo.persona"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "500795484862-hhjeuc2pp1ctt38co6joqbcg0fhblqc8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-6-k5FpzBh8E8QvF84Gq4JZJRdkyXUJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "500795484862-hhjeuc2pp1ctt38co6joqbcg0fhblqc8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
