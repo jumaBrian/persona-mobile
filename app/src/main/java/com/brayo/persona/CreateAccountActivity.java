@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.brayo.persona.databinding.ActivityCreateAccountBinding;
+import com.brayo.persona.util.JournalApi;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -120,6 +121,11 @@ public class CreateAccountActivity extends AppCompatActivity {
                                                                     binding.createAccountProgress.setVisibility(View.INVISIBLE);
                                                                     String name = task.getResult()
                                                                             .getString("username");
+
+                                                                    JournalApi journalApi = JournalApi.getInstance();
+                                                                    journalApi.setUserId(currentUserId);
+                                                                    journalApi.setUsername(name);
+
 
                                                                     Intent intent = new Intent(CreateAccountActivity.this,
                                                                             PostJournalActivity.class);
