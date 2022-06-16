@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,22 +12,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.brayo.persona.databinding.ActivityCreateAccountBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class CreateAccountActivity extends AppCompatActivity {
-    // Firestore connection
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ActivityCreateAccountBinding binding;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser currentUser;
+
+    // Firestore connection
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private CollectionReference collectionReference = db.collection("Users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +50,19 @@ public class CreateAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                createUserEmailAccount(email, password, username);
-                startActivity(new Intent(CreateAccountActivity.this, LoginActivity.class));
+                if (!TextUtils.isEmpty(binding.emailAccount.getText().toString())
+                        && !TextUtils.isEmpty(binding.passwordAccount.getText().toString())
+                        && !TextUtils.isEmpty(binding.usernameAccount.getText().toString())) {
+
+                    String email = binding.emailAccount.getText().toString().trim();
+                    String password = binding.passwordAccount.getText().toString().trim();
+                    String username = binding.usernameAccount.getText().toString().trim();
+
+                    createUserEmailAccount(email, password, username);
+                }else  {
+                    Toast.makeText(CreateAccountActivity.this,"Empty Fields Not Allowed",Toast.LENGTH_LONG)
+                            .show();
+                }
             }
         });
 
@@ -88,6 +108,38 @@ public class CreateAccountActivity extends AppCompatActivity {
                                 userObj.put("username", username);
 
                                 // Save to our firestore database
+                                collectionReference.add(userObj)
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                documentReference.get()
+                                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                if (Objects.requireNonNull(task.getResult()).exists()) {
+                                                                    binding.createAccountProgress.setVisibility(View.INVISIBLE);
+                                                                    String name = task.getResult()
+                                                                            .getString("username");
+
+                                                                    Intent intent = new Intent(CreateAccountActivity.this,
+                                                                            PostJournalActivity.class);
+                                                                    intent.putExtra("username", name);
+                                                                    intent.putExtra("userId", currentUserId);
+                                                                    startActivity(intent);
+
+                                                                }else {
+
+                                                                }
+                                                            }
+                                                        });
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+
+                                            }
+                                        });
                             } else {
                                 // something went wrong
 
