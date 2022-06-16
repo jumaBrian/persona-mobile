@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Persona"
         tools:targetApi="31">
         <activity
+            android:name=".PostJournalActivity"
+            android:exported="false" />
+        <activity
             android:name=".CreateAccountActivity"
             android:exported="false" />
         <activity
