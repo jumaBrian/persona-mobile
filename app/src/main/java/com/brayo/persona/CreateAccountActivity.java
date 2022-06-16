@@ -128,7 +128,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                                                                     startActivity(intent);
 
                                                                 }else {
-
+                                                                    binding.createAccountProgress.setVisibility(View.INVISIBLE);
                                                                 }
                                                             }
                                                         });
